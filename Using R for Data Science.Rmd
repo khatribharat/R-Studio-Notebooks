@@ -111,3 +111,33 @@ rpm_predictor_failures
 crap_urls <- names(rpms)[rpm_predictor_failures]
 crap_urls
 ```
+
+
+Matrices
+--------
+`Definition` : In R, a matrix is a two-dimensional collection of elements of the same data type (*numeric*, *character*, or *logical*)
+
+Matrices can be constructed using the function `matrix()`
+
+```{r}
+# Fill c(1,2,3,4,5,6,7,8,9) row wise in a 3x3 square matrix
+row_wise_matrix <- matrix(1:9, byrow=TRUE, nrow=3)
+row_wise_matrix
+
+# Fill c(1,2,3,4,5,6,7,8,9) column wise in a 3x3 square matrix
+col_wise_matrix <- matrix(1:9, byrow=FALSE, nrow=3)
+col_wise_matrix
+```
+
+
+Naming matrices
+---------------
+As with vectors, R allows you to name the *rows* and *columns* of a matrix using `rownames()` and `colnames()` respectively. Naming rows and columns helps both in associating a context with the data, as well as accessing data using better understood labels. 
+
+```{r}
+weekend_ctrs <- matrix(c(7.1, 6.9, 0.8, 0.7, 1.8, 1.6), byrow=TRUE, nrow=3)
+rownames(weekend_ctrs) <- c("goodhousekeeping.com", "thekrazycouponlady.com", "cheapflights.com")
+colnames(weekend_ctrs) <- c("Sat", "Sun")
+weekend_ctrs
+```
+
