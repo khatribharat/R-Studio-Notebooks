@@ -1,0 +1,113 @@
+---
+title: "Using R for Data Science"
+author: "Bharat Khatri"
+date: "Thursday 11 December 2014"
+output: html_document
+---
+
+Data Types in R
+---------------
+1. **Numerics** 
+```{r} 
+my_numeric <- 42.5
+```
+2. **Logical** 
+```{r}
+my_logical <- TRUE
+```
+3. **Characters** 
+```{r} 
+my_character <- "some text"
+```
+
+Note : R is *case sensitive*
+
+You can check the data type of a variable by using the `class()` function.
+
+```{r}
+class(my_numeric)
+class(my_logical)
+class(my_character)
+```
+
+
+Vectors
+-------
+R uses the combine function `c()` to instantiate vectors.
+
+Note: Vectors in R are indexed from `1` and not `0`.
+
+```{r}
+numeric_vector <- c(42, 42.5, -1)
+numeric_vector
+
+character_vector <- c("meaning", "of", "life")
+character_vector
+
+boolean_vector <- c(FALSE, FALSE, TRUE)
+boolean_vector
+```
+
+In order to augment vectors with some context, R allows you to give a *name* to each element of a vector, using the `names()` function. Vectors with names assigned to each of the elements are sometimes called *named vectors*.
+
+```{r}
+click_through_rates <- c(0.5, 0.5, 0.4, 0.2, 0.1, 0.1, 0.1)
+names(click_through_rates) <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+```
+
+We use the bracket notation `[]` to access elements of a vector.
+
+```{r}
+click_through_rate_tue <- click_through_rates["Tue"]
+click_through_rate_tue
+```
+
+To access multiple elements of a vector together, you need to use a vector inside the bracket notation.
+
+```{r}
+click_through_rates_weekday <- click_through_rates[c("Mon", "Tue", "Wed", "Thu", "Fri")]
+click_through_rates_weekday
+```
+
+There's another way you can select specific elements from a vector.
+
+```{r}
+click_through_rates_weekday <- click_through_rates[c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)]
+click_through_rates_weekday
+```
+
+R supplements vector data type with `aggregate` functions.
+
+```{r}
+daily_expenses <- c(100, 80, 120, 100, 500, 1000, 500)
+names(daily_expenses) <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+total_expense <- sum(daily_expenses)
+total_expense
+
+mean_expense <- mean(daily_expenses)
+mean_expense
+```
+
+
+Note : There is a shorthand for generating a vector of contiguous integers.
+```{r}
+num_campus_hires <- c(0, 1, 2, 3, 4)
+num_campus_hires
+
+num_campus_hires <- 0:4
+num_campus_hires
+```
+
+Map operations on vectors
+-------------------------
+```{r}
+rpms <- c(1.2, 2.3, -1, 15.1, -1, 5.7)
+names(rpms) <- c("thekrazycouponlday.com", "obamacarefacts.com", "amazon.com", "goodhousekeeping.com", "wikipedia.org", "cheapflights.com")
+
+rpm_predictor_failures <- rpms < 0
+rpm_predictor_failures
+
+crap_urls <- names(rpms)[rpm_predictor_failures]
+crap_urls
+```
