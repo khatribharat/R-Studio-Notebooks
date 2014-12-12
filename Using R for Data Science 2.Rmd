@@ -1,0 +1,370 @@
+---
+title: "Using R for Data Science"
+author: "Bharat Khatri"
+date: "Thursday 11 December 2014"
+output: html_document
+---
+
+Data Types in R
+---------------
+1. **Numerics** 
+```{r} 
+my_numeric <- 42.5
+```
+2. **Logical** 
+```{r}
+my_logical <- TRUE
+```
+3. **Characters** 
+```{r} 
+my_character <- "some text"
+```
+
+Note : R is *case sensitive*
+
+You can check the data type of a variable by using the `class()` function.
+
+```{r}
+class(my_numeric)
+class(my_logical)
+class(my_character)
+```
+
+
+Vectors
+-------
+R uses the combine function `c()` to instantiate vectors.
+
+Note: Vectors in R are indexed from `1` and not `0`.
+
+```{r}
+numeric_vector <- c(42, 42.5, -1)
+numeric_vector
+
+character_vector <- c("meaning", "of", "life")
+character_vector
+
+boolean_vector <- c(FALSE, FALSE, TRUE)
+boolean_vector
+```
+
+In order to augment vectors with some context, R allows you to give a *name* to each element of a vector, using the `names()` function. Vectors with names assigned to each of the elements are sometimes called *named vectors*.
+
+```{r}
+click_through_rates <- c(0.5, 0.5, 0.4, 0.2, 0.1, 0.1, 0.1)
+names(click_through_rates) <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+```
+
+We use the bracket notation `[]` to access elements of a vector.
+
+```{r}
+click_through_rate_tue <- click_through_rates["Tue"]
+click_through_rate_tue
+```
+
+To access multiple elements of a vector together, you need to use a vector inside the bracket notation.
+
+```{r}
+click_through_rates_weekday <- click_through_rates[c("Mon", "Tue", "Wed", "Thu", "Fri")]
+click_through_rates_weekday
+```
+
+There's another way you can select specific elements from a vector.
+
+```{r}
+click_through_rates_weekday <- click_through_rates[c(TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE)]
+click_through_rates_weekday
+```
+
+R supplements vector data type with `aggregate` functions.
+
+```{r}
+daily_expenses <- c(100, 80, 120, 100, 500, 1000, 500)
+names(daily_expenses) <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+total_expense <- sum(daily_expenses)
+total_expense
+
+mean_expense <- mean(daily_expenses)
+mean_expense
+```
+
+
+Note : There is a shorthand for generating a vector of contiguous integers.
+```{r}
+num_campus_hires <- c(0, 1, 2, 3, 4)
+num_campus_hires
+
+num_campus_hires <- 0:4
+num_campus_hires
+```
+
+Map operations on vectors
+-------------------------
+```{r}
+rpms <- c(1.2, 2.3, -1, 15.1, -1, 5.7)
+names(rpms) <- c("thekrazycouponlday.com", "obamacarefacts.com", "amazon.com", "goodhousekeeping.com", "wikipedia.org", "cheapflights.com")
+
+rpm_predictor_failures <- rpms < 0
+rpm_predictor_failures
+
+crap_urls <- names(rpms)[rpm_predictor_failures]
+crap_urls
+```
+
+
+Matrices
+--------
+`Definition` : In R, a matrix is a two-dimensional collection of elements of the same data type (*numeric*, *character*, or *logical*)
+
+Matrices can be constructed using the function `matrix()`
+
+```{r}
+# Fill c(1,2,3,4,5,6,7,8,9) row wise in a 3x3 square matrix
+row_wise_matrix <- matrix(1:9, byrow=TRUE, nrow=3)
+row_wise_matrix
+
+# Fill c(1,2,3,4,5,6,7,8,9) column wise in a 3x3 square matrix
+col_wise_matrix <- matrix(1:9, byrow=FALSE, nrow=3)
+col_wise_matrix
+```
+
+
+Naming matrices
+---------------
+As with vectors, R allows you to name the *rows* and *columns* of a matrix using `rownames()` and `colnames()` respectively. Naming rows and columns helps both in associating a context with the data, as well as accessing data using better understood labels. 
+
+```{r}
+weekend_ctrs <- matrix(c(7.1, 6.9, 0.8, 0.7, 1.8, 1.6), byrow=TRUE, nrow=3)
+rownames(weekend_ctrs) <- c("goodhousekeeping.com", "thekrazycouponlady.com", "cheapflights.com")
+colnames(weekend_ctrs) <- c("Sat", "Sun")
+weekend_ctrs
+```
+
+You can add additional rows and columns to an existing matrix using `rbind()` and `cbind()` respectively.
+
+```{r}
+
+# Binding matrices by column
+weekday_ctrs <- matrix(c(14.1, 15.3, 14, 15.1, 12, 1.1, 1.4, 1.5, 1.1, 1.1, 2.1, 2.4, 2.2, 2.3, 2.1), byrow=TRUE, nrow=3)
+rownames(weekday_ctrs) <- c("goodhousekeeping.com", "thekrazycouponlady.com", "cheapflights.com")
+colnames(weekday_ctrs) <- c("Mon", "Tue", "Wed", "Thu", "Fri")
+weekday_ctrs
+
+week_ctrs <- cbind(weekday_ctrs, weekend_ctrs)
+week_ctrs
+
+# Binding matrices by row
+new_weekend_ctrs <- matrix(c(3.1, 2.7, 6.2, 6.1), byrow=TRUE, nrow=2)
+rownames(new_weekend_ctrs) <- c("obamacarefacts.com", "finance.yahoo.com")
+colnames(new_weekend_ctrs) <- c("Sat", "Sun")
+new_weekend_ctrs
+
+all_weekend_ctrs <- rbind(weekend_ctrs, new_weekend_ctrs)
+all_weekend_ctrs
+```
+
+R also supplements matrices with `aggregate` functions.
+
+```{r}
+all_expenses = matrix(c(100, 60, 20, 100, 300, 500, 0, 100, 120, 120, 100, 100, 0, 600, 50, 60, 50, 20, 30, 40, 100, 0, 0, 0, 0, 0, 1800, 0, 300, 30, 20, 50, 80, 100, 100), byrow=TRUE, nrow=5)
+rownames(all_expenses) <- c("Food", "Travel", "Communication", "Clothing", "Miscellaneous")
+colnames(all_expenses) <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+all_expenses
+
+category_wise_expenses <- rowSums(all_expenses)
+category_wise_expenses
+
+day_wise_expenses <- colSums(all_expenses)
+day_wise_expenses
+```
+
+R uses bracket notation `[]` to access elements from a matrix.
+
+```{r}
+sun_miscellaneous_expenses <- all_expenses["Miscellaneous", "Sun"]
+food_expenses <- all_expenses["Food",]
+mon_expenses <- all_expenses[, "Mon"]
+```
+
+
+Factors
+-------
+Factors are used to store *categorical* variables. It is important that R knows whether it is dealing with a continous or a categorical variable, as the statistical models you will develop in the future treat both types differently. 
+
+Factors are created using `factor()`
+
+```{r}
+visitor_countries <- c("Tier 1", "Tier 2", "Tier 1", "Tier 3", "Tier 1")
+factor_visitor_countries <- factor(visitor_countries)
+factor_visitor_countries
+```
+
+There are two types of categorical variables :
+
+1. **Nominal** categorical variable
+2. **Ordinal** categorical variable
+
+Nominal variable
+
+Nominal categorical variables do not have an implied order. 
+
+```{r}
+adult_filter_values <- c("ADULT", "NON-ADULT", "NON-ADULT", "NON-ADULT")
+nominal_variables <- factor(adult_filter_values)
+nominal_variables 
+```
+
+Ordinal variable
+
+Ordinal categorical variables have a natural order.
+
+```{r}
+in_times <- c("EARLY", "REGULAR", "REGULAR", "LATE", "LATE", "LATE", "LATE")
+ordinal_variables <- factor(in_times, order=TRUE, levels=c("LATE", "REGULAR", "EARLY"))
+ordinal_variables
+```
+
+R allows you to *rename* the levels of factors.
+
+```{r}
+visitor_country_tiers <- c("1", "1", "2", "1", "3")
+factor_visitor_country_tiers <- factor(visitor_country_tiers)
+factor_visitor_country_tiers
+
+levels(factor_visitor_country_tiers)
+
+levels(factor_visitor_country_tiers) <- c("America", "Asia", "Africa")
+levels(factor_visitor_country_tiers)
+
+factor_visitor_country_tiers
+```
+
+
+Summarizing a factor
+--------------------
+`summary()` is one of the most useful functions of R, can can be used to get a quick overview of any R variable. Let's see what `summary()` provides us for factors.
+
+```{r}
+in_times <- c("EARLY", "REGULAR", "REGULAR", "LATE", "LATE", "LATE", "LATE")
+factor_in_times <- factor(in_times, order=TRUE, levels=c("LATE", "REGULAR", "EARLY"))
+summary(factor_in_times)
+```
+
+Comparision operations on ordinal factors
+-----------------------------------------
+```{r}
+in_times <- c("EARLY", "REGULAR", "REGULAR", "LATE", "LATE", "LATE", "LATE")
+names(in_times) <- c("Vinay", "Rajat", "Sachin", "Sonkar", "Bharat", "Rishabh", "Vinod")
+in_times
+
+factor_in_times <- factor(in_times, order=TRUE, levels=c("LATE", "REGULAR", "EARLY"))
+factor_in_times
+
+factor_in_times["Sachin"] > factor_in_times["Sonkar"]
+# Comparing factor elements
+```
+
+Data Frames
+-----------
+A data frame has the attributes of a dataset as columns and the observations as rows. A data frame is used as the fundamental data structure by most of R's modeling software.
+
+
+`head()` and `tail()` allow you to inspect data frames.
+
+```{r}
+# Access 10 elements from head
+head(mtcars, n=10)
+
+# Access 15 elements from tail
+tail(mtcars, n=15)
+```
+
+`str()` allows you to get a good summary of your dataset. This would often be the first thing that you do when you receive a data set.
+
+```{r}
+str(mtcars)
+```
+
+Constructing data frames
+```{r}
+keyword_categories <- factor(c("LEARNED_PATTERN_URL", "SERVER_SIDE_BEHAVIORAL", "AUTO_TAXONOMY_BROAD", "POPCAT_PATTERN", "NON_KBB"))                       
+```
+
+
+Built-in datasets in R
+----------------------
+1. mtcars
+2. iris
+
+ARFF (Attribute Relation File Format)
+-------------------------------------
+An ARFF file is an ASCII text file descrbing a list of instances sharing a set of attributes.
+ARFF files are composed of two sections: 
+
+1. **Header** (contains the name of the relation, a list of attributes and their types)
+2. **Data** (contains the instances following the relation)
+
+Attribute data types
+--------------------
+1. Numeric (includes *integer* and *real*)
+2. Categorical (nominal or ordinal)
+3. String (can contain arbitrary textual values)
+4. Date
+
+Data Science Experiments
+------------------------
+
+Procedure :
+1. Data Preparation
+  - Handling missing values
+  - Feature selection
+  - Train/Test split
+2. Pre processing
+  - Dimensionality Reduction
+3. Model Selection
+4. Model Validation
+  - Cross validation
+5. Model Accuracy
+6. Model Results
+  - Summary
+    - Confusion Matrix
+  
+
+Why is cross-validation useful?
+- N-fold cross validation
+
+
+Measures of Model Performance
+-----------------------------
+1. Precision
+2. Recall
+3. F-measure
+4. ROC Area
+5. Kappa Statistic
+
+Naive Bayes
+-----------
+We'll be using the e1071 R package to construct the naive bayes classifier.
+```{r}
+install.packages('e1071')
+library('e1071')
+classifier <- naiveBayes(iris[, 1:4], iris[, 5])
+
+# Confusion Matrix
+table(predict(classifier, iris[,-5]), iris[,5], dnn=list('predicted','actual'))
+
+
+# Summary
+classifier
+
+
+classifier$tables$Petal.Length
+
+
+# Plot
+plot(function(x) dnorm(x, 1.462, 0.1736640), 0, 8, col="red", main="Petal length distribution for the 3 different species")
+curve(dnorm(x, 4.260, 0.4699110), add=TRUE, col="blue")
+curve(dnorm(x, 5.552, 0.5518947 ), add=TRUE, col = "green")
+```
+
