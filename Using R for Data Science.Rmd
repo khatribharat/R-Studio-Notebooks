@@ -141,3 +141,140 @@ colnames(weekend_ctrs) <- c("Sat", "Sun")
 weekend_ctrs
 ```
 
+
+Factors
+---------------
+The term factor refers to a statistical data type used to store categorical variables. It stores the information about the variable (i.e the values it can take).
+  Suppose we have a vector of observations that belong to a limited number of categories. For example, gender_vector below contains the sex of 5 different individuals
+
+```{r}
+gender_vector <- c("Male","Female","Female","Male","Male")
+```
+
+You can create factor by using the function factor() and see what it variable it stores.
+
+```{r}
+factor_gender_vector <- factor(gender_vector)
+```
+
+There are two types of categorical variables. A nominal categorical variable and an ordinal categorical variable. To impose order on categories you can use factor function in the below way
+
+```{r}
+temperature_vector <- c("Hig","Low","Hig","Low","Med")
+factor_temperature_vector <- factor(temperature_vector, order=TRUE, levels=c("Low","Medium","High"))
+
+```
+
+You can manually rename the levels for your convinience
+
+```{r}
+levels(factor_temperature_vector) <- c("Low","Medium","High")
+```
+
+You can use summary() function to see the number of elements of each category
+
+```{r}
+summary(factor_temperature_vector)
+```
+
+Now you can access the underlying vector of observations through the factor
+
+```{r}
+factor_temperature_vector[1]
+factor_temperature_vector[2]  
+```
+
+When the factor is ordinal you can compare two observations for the order
+
+```{r}
+factor_temperature_vector[1] < factor_temperature_vector[2]  
+```
+
+
+One More Example
+
+```{r}
+speed_vector <- c("Fast","Slow","Slow","Fast","Ultra-fast")
+factor_speed_vector <- factor(speed_vector, ordered=TRUE, levels=c("Slow","Fast","Ultra-fast"))
+compare_them <- factor_speed_vector[2] > factor_speed_vector[5]
+compare_them
+```
+
+
+Data Frames
+----------------
+Matrix restricts all the elements to be of same type but that's not the case all times. For this dataframes are used. Below is an example dataset stored in R by default
+
+```{r}
+mtcars
+```
+
+You can have a peek at data using functions head(),tail()
+
+```{r}
+head(mtcars)
+tail(mtcars)
+```
+
+To get a initial insight into data you can use str() function. str() shows you the structure of the data frame. str() gives the information about no of entries, no of variables, type of each variable and first few entries for each variable.
+
+```{r}
+str(mtcars)
+```
+
+Data Frames Creation :
+--------------
+
+Lets say you have column vectors for different variables. Each vector has it's own data type. You can create the data frame as below.
+
+```{r}
+planets     <- c("Mercury","Venus","Earth","Mars","Jupiter","Saturn","Uranus","Neptune");
+type        <- c("Terrestrial planet","Terrestrial planet","Terrestrial planet","Terrestrial planet","Gas giant","Gas giant","Gas giant","Gas giant")
+diameter    <- c(0.382,0.949,1,0.532,11.209,9.449,4.007,3.883); 
+rotation    <- c(58.64,-243.02,1,1.03,0.41,0.43,-0.72,0.67);
+rings       <- c(FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE);
+
+# Create the data frame:
+planets_df  <- data.frame(planets,type,diameter,rotation,rings)
+```
+
+You can see the overview of planets_df using str() function
+```{r}
+str(planets_df)
+```
+
+Similar to vectors and matrices, you select elements from a data frame with the help of square brackets [ ]. By using a comma, you can indicate what to select from the rows and the columns respectively. 
+
+```{r}
+planets_df[1,2]
+planets_df[1:3,2:4]
+planets_df[1,]
+planets_df[1:3]
+planets_df[3:1,]
+planets_df[3:1,1]
+planets_df[3:1,"type"]
+furthest_planets_diameter <- planets_df[3:8,"diameter"]
+```
+
+To extract a column from data frame you can use [,column_num] or [,column_name ] but there is another way using $ symbol
+
+
+```{r}
+planets_df$diameter
+```
+
+You can use subset() function to extract a subset of variables using conditions
+
+```{r}
+subset(planets_df,subset=(planets_df$rings==TRUE))
+```
+Sorting is one of the important function used in data analysis. In R order() is used for sorting. order() when applied on an array will give position of each element when they are sorted
+
+
+
+```{r}
+a <- c(1,0.4,3,2.1,2.2)
+order(a)
+a[order(a)]
+```
+
